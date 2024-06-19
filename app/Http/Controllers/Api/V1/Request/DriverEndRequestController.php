@@ -54,6 +54,9 @@ class DriverEndRequestController extends BaseController
     */
     public function endRequest(DriverEndRequest $request)
     {
+
+        $stripe = new \Stripe\StripeClient(config('stripe.sk'));
+        $stripe->paymentIntents->capture('pi_3PTLWSRrfcRwgkyv0PEg7o9O', []);
         // Get Request Detail
         $driver = auth()->user()->driver;
 

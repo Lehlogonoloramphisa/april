@@ -73,11 +73,8 @@ class DriverCancelRequestController extends BaseController
 
             if ($payment_intent_id) {
                 // Cancel the Stripe payment intent
-              //  $stripe = new \Stripe\StripeClient(config('stripe.sk'));
-                //$stripe->paymentIntents->cancel($payment_intent_id, []);
-
                 $stripe = new \Stripe\StripeClient(config('stripe.sk'));
-                $stripe->paymentIntents->capture($payment_intent_id, []);
+                $stripe->paymentIntents->cancel($payment_intent_id, []);
             }
         }
 
