@@ -54,7 +54,6 @@ class DriverEndRequestController extends BaseController
     */
     public function endRequest(DriverEndRequest $request)
     {
-
         // Get Request Detail
         $driver = auth()->user()->driver;
 
@@ -84,6 +83,9 @@ class DriverEndRequestController extends BaseController
                 $request_place_params['request_path'] = $locations;
             }
         }
+
+
+
         // Remove firebase data
         // $this->database->getReference('requests/'.$request_detail->id)->remove();
 

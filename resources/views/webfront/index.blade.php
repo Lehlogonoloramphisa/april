@@ -1,3 +1,4 @@
+
 @extends('admin.layouts.web_header');
 
 <style>
@@ -20,50 +21,133 @@
         background-color: #ffffff;
     }
 
-  
+/* Add this CSS to your stylesheet */
+
+.banner {
+    position: relative;
+}
+
+.banner-image {
+    width: 100%;
+    height: 550px;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4); /* Adjust the background color and opacity as needed */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.logo img {
+    max-width: 100%;
+    height: auto;
+margin-top:100px;
+}
+
+
+.content {
+    color: white;
+    text-align: center;
+    padding: 20px;
+    font-family: 'Tahoma, Noto Sans, Gill Sans, Geneva, sans-serif';
+
+}
+#custom-heading {
+    font-size: 386px; /* Adjust the font size as needed */
+    font-weight: bold; /* Optionally, make the text bold */
+    margin-bottom: 20px; /* Add spacing below the heading */
+}
+.tex{
+height:700px;}
+@media (max-width: 767px) {
+     
+        /* Make the logo mobile responsive */
+        .light-logo img {
+            width: 80px; /* Adjust the width as needed */
+            height: auto;
+        }
+
+        /* Center the logo and content on mobile devices */
+        .logo, .content {
+            text-align: center;
+        }
+.tex{
+height:500px;
+}
+    }
+
+.border-0 {
+  border: none !important;
+}
+
+.rounded-top-left {
+  border-top-left-radius: 35px !important;
+}
+
+.rounded-bottom-right {
+  border-bottom-right-radius: 35px !important;
+}
+
+.font-family {
+  font-family: 'Noto Sans', sans-serif;
+  /* Replace 'YourChosenFont' with the actual font name you want to use */
+}
 
 </style>
-
-<div id="home" class="container-fluid mt-10">
-
+<div id="home" class="container-fluid mt-5 mt-md-10">
     <div class="row bg-cover" data-jarallax data-speed=".8" style="background: {{ $data->firstrowbgcolor }} !important;background-image: url(img/pattern-1.svg)">
-        <div class="col-md-6 p-0">
-            <img src="{{ asset($p.$data->bannerimage) }}" alt="" class="w-100">
-        </div>
-        <div class="col-md-6 py-10 py-md-0  m-auto">
-            <div class="text-center">
-            @if($data)
-            
-                <h1 class="text-white">
-                  {!! $data->description !!}   
-                </h1>
-            
-            @endif            
-                <div class="row">
-                    <div class="col-md-6 mb-5 text-md-right">
-                        <a href="{{ url($data->userioslink) }}" target="_blank">
-                            <img src="{{ asset($p.$data->playstoreicon1 ) }}" alt="" class="w-50 w-md-75 wow slideInLeft">
-                        </a>
-                    </div>
-                    <div class="col-md-6 mb-5 text-md-left">
-                        <a href="{{ url($data->userandroidlink) }}" target="_blank">
-                            <img src="{{ asset($p.$data->playstoreicon2) }}" alt="" class="w-50 w-md-75 wow slideInRight">
-                        </a>
+        <div class="col-md-12 p-0">
+            <!-- Banner Image -->
+            <img src="{{ asset($p.$data->bannerimage) }}" alt="" class="w-100 tex">
+            <!-- Logo and Content Overlay -->
+            <div class="overlay">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-6 py-5 py-md-0">
+                            <!-- Logo div -->
+                            <div class="logo text-center">
+    <span class="light-logo" style="display: flex; align-items: center; justify-content: center; height: 100px;">
+  <!--      <img src="{{ app_logo() ?? asset('images/email/logo.svg') }}" style="width: 160px; height: 160px; margin-top: 110px; margin-bottom: 10px;" alt="logo">
+   --> </span>
+</div>
+
+                        </div>
+                        <div class="col-md-6 py-5 py-md-0">
+    
+<div class="content text-center">
+    @if($data)
+        <h1 class="text-white custom-heading"> <!-- Assign the "custom-heading" class -->
+            {!! $data->description !!}
+        </h1>
+    @endif
+                                <div class="row">
+                                    <div class="col-md-6 mb-5 text-md-right">
+                                    </div>
+                                    <div class="col-md-6 mb-5 text-md-left">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
 </div>
-
 <!-- 
 <section class="py-15 mt-10" id="welcome" data-jarallax data-speed=".8" style="background-image: url(img/1.jpg);">
     <div class="container">
         <div class="row">
             <div class="col-12 col-md-7 text-white ml-auto">
                 <h2>
-                    It’s time to change your ride experience!
+                    ItÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢s time to change your ride experience!
                     Download the app for free
                 </h2>
                 <div class="row">
@@ -87,54 +171,50 @@
 </section> -->
   @if($data)
   
-
-<section class="py-10 bg-light">
+<section class="py-10 mt-10" style="background-color: #fff;">
     <div class="container">
         <div class="row">
-
             <div class="col-md-4 m-auto">
-                <div class=" dan-card-30 card lift p-5 mb-md-0 ">
-                    <div class=" card-img-top position-relative mx-auto " style=" max-width: 120px; ">
-                        <img class=" img-fluid " src="{{asset($p.$data->firstrowimage1)}}" alt=" ... ">
+                <div class="dan-card-30 card lift p-5 mb-md-0 border-0 rounded-top-left rounded-bottom-right" style="background-color: #0a396c;">
+                    <div class="card-img-top position-relative mx-auto" style="max-width: 120px;">
+                        <img class="img-fluid" src="https://fbkrides.com/storage/uploadwebfrontfiles/F8yb5lEFnKdN0qbELU2HguZkGpWmIDswDfuNT0Ml.png" alt="...">
                     </div>
-                    <div class=" card-body text-center ">
-                        <h6 class=" mb-4 text-dark ">
-                            {!! $data->firstrowheadtext1 !!}
+                    <div class="card-body text-center" style="color: #fff;">
+                        <h6 class="mb-4 text-white font-family">
+                            <h2><strong>Tap a button, get a ride</strong></h2>
                         </h6>
-                        <p class=" mb-0 text-gray-500 ">
-                            {!! $data->firstrowsubtext1 !!}
+                        <p class="mb-0 text-white font-family">
+                            Choose your ride and set your location. You'll see your driver's picture and vehicle details, and can track their arrival on the map.
                         </p>
                     </div>
                 </div>
             </div>
-
             <div class="col-md-4 m-auto">
-                <div class=" dan-card-30 card lift p-5 mb-md-0 ">
-                    <div class=" card-img-top position-relative mx-auto " style=" max-width: 120px; ">
-                        <img class=" img-fluid " src="{{asset($p.$data->firstrowimage2)}}" alt=" ... ">
+                <div class="dan-card-30 card lift p-5 mb-md-0 border-0 rounded-top-left rounded-bottom-right" style="background-color: #0a396c;">
+                    <div class="card-img-top position-relative mx-auto" style="max-width: 120px;">
+                        <img class="img-fluid" src="https://fbkrides.com/storage/uploadwebfrontfiles/FcnzXi8I0p6Wf3XU00YV5V9HCnHgZA4ZphIbb328.png" alt="...">
                     </div>
-                    <div class=" card-body text-center ">
-                        <h6 class=" mb-4 text-dark ">
-                            {!! $data->firstrowheadtext2 !!}
+                    <div class="card-body text-center" style="color: #fff;">
+                        <h6 class="mb-4 text-white font-family">
+                            <h2><strong>Always on, always available</strong></h2>
                         </h6>
-                        <p class=" mb-0 text-gray-500 ">
-                            {!! $data->firstrowsubtext2 !!}
+                        <p class="mb-0 text-white font-family">
+                            No phone calls to make, no pick-ups to schedule. With 24/7 availability, request a ride any time of day, any day of the year
                         </p>
                     </div>
                 </div>
             </div>
-
             <div class="col-md-4 m-auto">
-                <div class=" dan-card-30 card lift p-5 mb-md-0 ">
-                    <div class=" card-img-top position-relative mx-auto " style=" max-width: 120px; ">
-                        <img class=" img-fluid " src="{{asset($p.$data->firstrowimage3)}} " alt=" ... ">
+                <div class="dan-card-30 card lift p-5 mb-md-0 border-0 rounded-top-left rounded-bottom-right" style="background-color: #0a396c;">
+                    <div class="card-img-top position-relative mx-auto" style="max-width: 120px;">
+                        <img class="img-fluid" src="https://fbkrides.com/storage/uploadwebfrontfiles/HB2w4gVgfk9lKHrUva4wk5p6hYV36BLy7FkyYbHP.png" alt="...">
                     </div>
-                    <div class=" card-body text-center ">
-                        <h6 class=" mb-4 text-dark ">
-                            {!! $data->firstrowheadtext3 !!}
+                    <div class="card-body text-center" style="color: #fff;">
+                        <h6 class="mb-4 text-white font-family">
+                            <h2><strong>You rate, we listen</strong></h2>
                         </h6>
-                        <p class=" mb-0 text-gray-500 ">
-                            {!! $data->firstrowsubtext3 !!}                        
+                        <p class="mb-0 text-white font-family">
+                            Rate your driver and provide anonymous feedback about your trip. Your input helps us make every ride a 5-star experience.
                         </p>
                     </div>
                 </div>
@@ -142,6 +222,7 @@
         </div>
     </div>
 </section>
+
 
 <div class="container dan-slider-2 py-8">
     <div class="row position-relative align-items-center">
@@ -295,3 +376,4 @@
 
 @endif
 @extends('admin.layouts.web_footer')
+

@@ -38,8 +38,7 @@ use App\Jobs\Notifications\SendPushNotification;
 class StripeController extends ApiController
 {
 
-
-    public function __construct(Database $database)
+  public function __construct(Database $database)
     {
         $this->database = $database;
     }
@@ -126,8 +125,34 @@ class StripeController extends ApiController
                 "test_environment"=>$test_environment,
             ],'stripe_key_listed_success');
 
+    }  
+
+    public function fetchSavedCards()
+    {
+        try {
+            $user = auth()->user();
+
+            // Fetch saved cards associated with the current user from Stripe
+            $stripeCards = CardInfo::where('user_id', $user->id)->get();
+
+            // Map the retrieved cards to the desired response format
+            $cards = $stripeCards->map(function ($card) {
+                return [
+                    'id' => $card->stripe_id,
+                    'brand' => $card->brand,
+                    'last4' => $card->last4,
+                    'exp_month' => $card->exp_month,
+                    'exp_year' => $card->exp_year,
+                ];
+            });
+
+            return $this->respondSuccess($cards, 'Saved cards fetched successfully');
+        } catch (\Exception $e) {
+            return $this->respondError('Failed to fetch saved cards');
+        }
     }
-    /**
+
+  /**
     * Add money to wallet
     * @bodyParam amount double required  amount entered by user
     * @bodyParam payment_id string required  payment_id from transaction
@@ -256,7 +281,7 @@ class StripeController extends ApiController
         dispatch(new SendPushNotification($driver->user,$title,$body));
 
 
-        return $this->respondSuccess(null,'payment_completed_successfully');
+        return;
 
 
     }

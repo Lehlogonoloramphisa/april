@@ -1,12 +1,13 @@
 {
   "type": "service_account",
-  "project_id": "tagxi-340103",
-  "private_key_id": "456d6ff6cb",
-  "private_key": "-----BEGIN PRIVATE KEY-----\nMIO\n-----END PRIVATE KEY-----\n",
-  "client_email": "firebase-adminsccount.com",
-  "client_id": "11202284",
+  "project_id": "finalrides",
+  "private_key_id": "c1f33f8bd4055a91feb704590da4415944c5274b",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCXfhv5MFUCMwPG\nZdGpvgroZEZ67Tb786sswopiKs5/u9N0bs30ENXSoX/ZXbbFnm7pyTrgsRW9thtb\nzUVTs4CaZo1rKb77MnklsTZfr7ozno2lcZhSV9vQR6ptXY/ff4iYr31niKmpzJKH\nR1OAhQUMONcr2xZ92woRkS/dx9l+krhubjFWPviBSMbk+IIUG7THcwLwuKjSLRsP\nrB6DmspKWN8pjXnt6pkFvf3EPbuCEpsFUmrTss1701GnWeYvFdPjdNJ8FLC/LpLr\nXETlhu9lkSNHCO5ddMBIgE3tw6CRjvMhwwcieoy6gBZzqvtcseDDKSuonM8dS01L\n6z3ho3pXAgMBAAECggEAB+Hl7rdXFQA2iBIwMJbU1naxPCAvpjhthayxqp3zlK3f\nOMWzLanallUU4+h+ZBX0S3HPAHX2XaKmFca+frZuUJpZbWQErelYaF+qJpxsIdd0\nI1GfzVkI9PNlqL8fh0+JefhXnBV+Tnl4flV1wNArDRHAEGYb63yEL5nQVcfaRz2i\nntGAH3228QL6yqFoICZnqmSKYyaK7a4lyj13hy8CxzzHKTrsxHZ0zAfMA60Nof95\nIBQan5VjrD1DPc7ygXbITiAoNe030ZCwr3uLquzfwVq+brrAANQK5d/yOFo3JloY\nZQSpqkMvc22y3jLKxNSl253Mspvah//Qxi+MpyNoQQKBgQDKOYGFzskBql1sWXYW\nOf58U1XAvV2/XiQQyCjd2Oz6CZ3OeIWPo9hGCNRr7T0fQlVr49eNx/vU1fqOJ2xF\nRdUqh0hQyvqWjgH2/voIdvYztY8gVMkKryODvBDlP5jDDryP+Q8AU7YIKSId4vMK\ndGlAidGlk72hfxfUuJmAe6iiBwKBgQC/xwISAT3tU2WWe5Q7Y07u0mQRufeCSSmp\nZ9matLLFbHTqtC1zuC/1aPkue3uh4Cmn4eAo5Kz3n+u4m9diHnU67yH4mgWzlUiq\n7NEbqiIGJKJiVDTfqJu60/3kFBWU8pZsO/4l0Y58kGFAfkaoajRN7H4Wfe7bpiH+\n9OPrcRYRMQKBgD9ev+jngPPFqFsAudGDQO1CzBeG/+6tGI4tuyiyBqjgBJSkDe6S\nQH7J248qm8HE7rHNh0nFxnPOziJn1jTrCj62gAHZaaduPs1g34dxh/tyRLSz/QAd\nG/r3HzBHup49aveO65WFpgBuq2NEMDcxfZ4c0haZ8o2+HwCpDGlH1vNXAoGBAJ37\nbvUuGLm9Dd7dhss1j/ylTNJdhEvLwYpQhq4vVWXVZqtCKn89qCReiYeFKd+8LhSi\nump1lxeWojS+DLxDowcdn7qQB0pdHDPSSqCjksvEuhCOlc/5sfBCWtDcyrqc7NXU\nxhSZgOuUdMkQPVzXwKbAv04ACBjhzvec/XUi/67BAoGAYbQz1jNhfMW3cBsEN9+V\nByvPh8m5NIU07Ao/UxY1fHSotwezmAGNORDyTqgcnB5zNcNTwHEY2qoSHiuxOY39\naO+cqOc1D0zTev8GYT2NDkZXO4dCDthV2eT5aDQKg8XB8IIdav0x3MI+3+R0BAYA\nsU1/WGzIpqVgryv1vM644tE=\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-0imzm@finalrides.iam.gserviceaccount.com",
+  "client_id": "101198838287757441791",
   "auth_uri": "https://accounts.google.com/o/oauth2/auth",
   "token_uri": "https://oauth2.googleapis.com/token",
   "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-3jktb%40tagxi-340103.iam.gserviceaccount.com"
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-0imzm%40finalrides.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
 }

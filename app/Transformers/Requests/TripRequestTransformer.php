@@ -48,7 +48,7 @@ class TripRequestTransformer extends Transformer
             'request_number' => $request->request_number,
             'ride_otp'=>$request->ride_otp,
             'is_later' => $request->is_later,
-            'user_id' => $request->user_id,
+            'user_id' => $request->user_id, 
             'service_location_id'=>$request->service_location_id,
             'trip_start_time' => $request->converted_trip_start_time,
             'arrived_at' => $request->converted_arrived_at,

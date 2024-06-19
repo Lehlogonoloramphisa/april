@@ -12,6 +12,7 @@ class VerifyCsrfToken extends BaseVerifier
      * @var array
      */
     protected $except = [
+        '/stripe/webhook', // Exclude your webhook route from CSRF verification
         /*
          * Temporarily allow post request without csrf token for testing.
          * Remove these before production release.

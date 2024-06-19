@@ -37,17 +37,19 @@ class PaymentGatewayServiceProvider extends ServiceProvider
             $stripeMode = DB::table('settings')
                 ->where('name', 'stripe-environment')
                 ->value('value');
-
-            if ($stripeMode == "test") {
+        if($stripeMode){
+             if ($stripeMode == "test") {
                 $stripePublishableKey = $stripeKeys['stripe_test_publishable_key']->value;
                 $stripeSecretKey = $stripeKeys['stripe_test_secret_key']->value;
             } else {
                 $stripePublishableKey = $stripeKeys['stripe_live_publishable_key']->value;
                 $stripeSecretKey = $stripeKeys['stripe_live_secret_key']->value;
-            }
+            }         
+        }
+
 
 //paypal key update 
-            $paypalKeys = DB::table('settings')
+              $paypalKeys = DB::table('settings')
                 ->whereIn('name', ['paypal_sandbox_client_id',
                     'paypal_sandbox_client_secrect',
                     'paypal_sandbox_app_id',
@@ -56,12 +58,12 @@ class PaymentGatewayServiceProvider extends ServiceProvider
                     'paypal_live_app_id',
                     'paypal_notify_url'])
                 ->get()
-                ->keyBy('name');
+                ->keyBy('name');     
 
-            $paypalMode = DB::table('settings')
+             $paypalMode = DB::table('settings')
                 ->where('name', 'paypal_mode')
                 ->value('value');
-
+        if($paypalMode){
             if ($paypalMode == "sandbox") 
             {
                 $paypal_client_id = $paypalKeys['paypal_sandbox_client_id']->value;
@@ -78,18 +80,18 @@ class PaymentGatewayServiceProvider extends ServiceProvider
 
             }
 // dd($paypalKeys); 
-
+        }
             
             // Set the configuration values directly
-            Config::set('stripe.pk', $stripePublishableKey);
-            Config::set('stripe.sk', $stripeSecretKey);
+            Config::set('stripe.pk', $stripePublishableKey ?? null);
+            Config::set('stripe.sk', $stripeSecretKey ?? null);
          
             //paypal 
-            Config::set("paypal.mode", $paypalMode);
-            Config::set("paypal.{$paypalMode}.client_id", $paypal_client_id);
-            Config::set("paypal.{$paypalMode}.client_secret", $paypal_client_secrect);
-            Config::set("paypal.{$paypalMode}.app_id", $paypal_app_id);
-            Config::set("paypal.notify_url", $paypal_url);
+            Config::set("paypal.mode", $paypalMode ??null);
+            Config::set("paypal.{$paypalMode}.client_id", $paypal_client_id ?? null);
+            Config::set("paypal.{$paypalMode}.client_secret", $paypal_client_secrect ?? null);
+            Config::set("paypal.{$paypalMode}.app_id", $paypal_app_id ?? null);
+            Config::set("paypal.notify_url", $paypal_url ?? null);
 
         }
     }

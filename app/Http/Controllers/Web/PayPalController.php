@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Web;
+use Srmklive\PayPal\Services\PayPal as PayPalClient;
 use Illuminate\Http\Request as ValidatorRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Validation\ValidationException;
@@ -26,7 +27,6 @@ use App\Models\Request\Request as RequestModel;
 use App\Models\User;
 use Log;
 use Kreait\Firebase\Contract\Database;
-use Srmklive\PayPal\Services\PayPal as PayPalClient;
 
 class PayPalController extends Controller
 {
@@ -40,14 +40,14 @@ class PayPalController extends Controller
         $amount = request()->input('amount');
         $payment_for = request()->input('payment_for');
         $request_id = request()->input('request_id');
-        $currency = $user->countryDetail->currency_code ?? "USD";
+        $currency = $user->countryDetail->currency_code ?? "ZAR";
         $user = User::find(request()->input('user_id'));
 
         $user_id = request()->input('user_id');
 
         if (env('APP_FOR')=='demo') {
 
-        $currency ="USD";
+        $currency ="ZAR";
         
         }
 
@@ -60,6 +60,7 @@ class PayPalController extends Controller
         $provider->setApiCredentials(config('paypal'));
         $paypalToken = $provider->getAccessToken();
 
+//dd($paypalToken);
         // Storing data in session
             $amount = $request->amount;
             $payment_for = $request->payment_for;
@@ -80,7 +81,7 @@ class PayPalController extends Controller
             "purchase_units" => [
                 0 => [
                     "amount" => [
-                        "currency_code" => "USD",
+                        "currency_code" => "ZAR",
                         "value" => $request->amount
                     ]
                 ]
@@ -186,7 +187,31 @@ class PayPalController extends Controller
                 $web_booking_value = $request_detail->web_booking;
 
                 $request_detail->update(['is_paid' => true]);
+                $driver_commission = $request_detail->requestBill->driver_commision;
 
+                    $wallet_model = new DriverWallet();
+                    $wallet_add_history_model = new DriverWalletHistory();
+                    $user_id = $request_detail->driver_id;
+                    /*wallet Modal*/
+                    $user_wallet = $wallet_model::firstOrCreate([
+                    'user_id'=>$user_id]);
+                    $user_wallet->amount_added += $amount;
+                    $user_wallet->amount_balance += $amount;
+                    $user_wallet->save();
+                    $user_wallet->fresh();
+                    /*wallet history*/
+                    $wallet_add_history_model::create([
+                    'user_id'=>$user_id,
+                    'amount'=>$amount,
+                    'transaction_id'=>$request->PayerID,
+                    'remarks'=>WalletRemarks::MONEY_DEPOSITED_TO_E_WALLET,
+                    'is_credit'=>true]);
+
+
+                    $title = trans('push_notifications.amount_credited_to_your_wallet_title');
+                    $body = trans('push_notifications.amount_credited_to_your_wallet_body');
+
+                    dispatch(new SendPushNotification($request_detail->driverDetail->user,$title,$body));
                  $this->database->getReference('requests/'.$request_detail->id)->update(['is_paid'=>1]);
 
 

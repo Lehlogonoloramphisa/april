@@ -166,9 +166,9 @@ Route::middleware('guest')->namespace('Dispatcher')->group(function () {
 });
 
 
-// Route::namespace('Admin')->group(function () {
-//     Route::get('track/request/{request}', 'AdminViewController@trackTripDetails');
-// });
+ Route::namespace('Admin')->group(function () {
+     Route::get('track/request/{request}', 'AdminViewController@trackTripDetails');
+ });
 
 
 Route::middleware('auth:web')->group(function () {

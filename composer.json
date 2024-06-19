@@ -5,7 +5,7 @@
     "keywords": ["framework", "laravel"],
     "license": "MIT",
     "require": {
-        "php": "^7.3|^8.0",
+        "php": "^7.3|^8.1.28",
         "aws/aws-sdk-php-laravel": "^3.7",
         "barryvdh/laravel-debugbar": "^3.7",
         "barryvdh/laravel-dompdf": "^1.0.0",
@@ -39,7 +39,7 @@
         "saikiran/geohash": "^1.0",
         "simplesoftwareio/simple-qrcode": "^4.2",
         "spatie/laravel-fractal": "^6.0",
-        "srmklive/paypal": "~3.0",
+        "srmklive/paypal": "^3.0",
         "stripe/stripe-php": "^13.16",
         "symfony/dom-crawler": "^6.1",
         "tanmuhittin/laravel-google-translate": "^2.1"

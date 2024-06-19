@@ -193,6 +193,11 @@ return [
         App\Providers\RouteServiceProvider::class,
 
         App\Providers\MailConfigServiceProvider::class,
+      //newly added
+        Srmklive\PayPal\Providers\PayPalServiceProvider::class,
+        App\Providers\PaymentGatewayServiceProvider::class,
+        BinaryTorch\LaRecipe\LaRecipeServiceProvider::class,
+        Barryvdh\DomPDF\ServiceProvider::class,
 
     ],
 

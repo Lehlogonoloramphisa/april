@@ -52,8 +52,8 @@
     <script>
         function makePayment() {
             FlutterwaveCheckout({
-                public_key: "{{$public_key}}",   //"FLWPUBK_TEST-02b9b5fc6406bd4a41c3ff141cc45e93-X",
-                tx_ref: "{{$tx_ref}}",  //"txref-DI0NzMx13",
+                public_key: "FLWPUBK_TEST-02b9b5fc6406bd4a41c3ff141cc45e93-X",
+                tx_ref: "txref-DI0NzMx13",
                 amount: "{{$amount}}",
                 currency: "{{$currency}}",
                 payment_options: "card, banktransfer, ussd",  //update payment option what You want

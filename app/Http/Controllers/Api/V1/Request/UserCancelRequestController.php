@@ -16,214 +16,180 @@ use App\Base\Constants\Masters\zoneRideType;
 use App\Base\Constants\Masters\PaymentType;
 use App\Models\Admin\CancellationReason;
 use Kreait\Firebase\Contract\Database;
+use Kreait\Firebase\Factory;
 use App\Jobs\Notifications\SendPushNotification;
 use Illuminate\Http\Request;
 use App\Models\Request\Request as RequestRequest;
 use Illuminate\Support\Facades\Artisan;
+use App\Http\Controllers\Web\StripeController;
 
-/**
- * @group User-trips-apis
- *
- * APIs for User-trips apis
- */
 class UserCancelRequestController extends BaseController
 {
+    protected $stripeController;
 
-    public function __construct(Database $database)
+    public function __construct(Database $database, StripeController $stripeController)
     {
         $this->database = $database;
+        $this->stripeController = $stripeController;
     }
 
-    /**
-    * User Cancel Request
-    * @bodyParam request_id uuid required id of request
-    * @bodyParam reason string optional reason provided by user
-    * @bodyParam custom_reason string optional custom reason provided by user
-    *@response {
-    "success": true,
-    "message": "success"}
-    */
     public function cancelRequest(CancelTripRequest $request)
     {
-        /**
-        * Validate the request which is authorised by current authenticated user
-        * Cancel the request by updating is_cancelled true with reason if there is any reason
-        * Available the driver who belongs to the request
-        * Notify the driver that the user is cancelled the trip request
-        */
-        // Validate the request which is authorised by current authenticated user
         $user = auth()->user();
         $request_detail = $user->requestDetail()->where('id', $request->request_id)->first();
-        // Throw an exception if the user is not authorised for this request
+    
         if (!$request_detail) {
             $this->throwAuthorizationException();
         }
+    
         $request_detail->update([
-            'is_cancelled'=>true,
-            'reason'=>$request->reason,
-            'custom_reason'=>$request->custom_reason,
-            'cancel_method'=>UserType::USER,
-            'cancelled_at'=>date('Y-m-d H:i:s'),
+            'is_cancelled' => true,
+            'reason' => $request->reason,
+            'custom_reason' => $request->custom_reason,
+            'cancel_method' => UserType::USER,
+            'cancelled_at' => now(),
         ]);
 
-        $request_detail->fresh();
-        /**
-        * Apply Cancellation Fee
-        */
+        // Retrieve the payment_intent_id from Firebase Realtime Database using user_id
+        if ($request_detail->payment_opt == PaymentType::CARD) {
+            $payment_intent_id = $this->database->getReference('requests/user_id/' . $user->id . '/payment_intent_id')->getValue();
+    
+            if ($payment_intent_id) {
+                // Cancel the Stripe payment intent
+                $stripe = new \Stripe\StripeClient(config('stripe.sk'));
+                $stripe->paymentIntents->cancel($payment_intent_id, []);
+            }
+        }
+    
         $charge_applicable = false;
-
         if ($request->custom_reason) {
             $charge_applicable = true;
         }
         if ($request->reason) {
             $reason = CancellationReason::find($request->reason);
-            if($reason){
-
-                if ($reason->payment_type=='free') {
-                    $charge_applicable=false;
+            if ($reason) {
+                if ($reason->payment_type == 'free') {
+                    $charge_applicable = false;
                 } else {
-                    $charge_applicable=true;
+                    $charge_applicable = true;
                 }
-
-            }else{
-
+            } else {
                 $charge_applicable = false;
             }
-            
         }
-
-        /**
-         * get prices from zone type
-         */
-        if ($request_detail->is_later) {
-            $ride_type = zoneRideType::RIDELATER;
-
-        } else {
-            $ride_type = zoneRideType::RIDENOW;
-
-        }
-
+    
+        $ride_type = $request_detail->is_later ? zoneRideType::RIDELATER : zoneRideType::RIDENOW;
+    
         if ($charge_applicable) {
             $zone_type_price = $request_detail->zoneType->zoneTypePrice()->where('price_type', $ride_type)->first();
-
             $cancellation_fee = $zone_type_price->cancellation_fee;
-            if ($request_detail->payment_opt==PaymentType::WALLET) {
+    
+            if ($request_detail->payment_opt == PaymentType::WALLET) {
                 $requested_user = $request_detail->userDetail;
                 $user_wallet = $requested_user->userWallet;
                 $user_wallet->amount_spent += $cancellation_fee;
                 $user_wallet->amount_balance -= $cancellation_fee;
                 $user_wallet->save();
-                // Add the history
+    
                 $requested_user->userWalletHistory()->create([
-                    'amount'=>$cancellation_fee,
-                    'transaction_id'=>$request_detail->id,
-                    'remarks'=>WalletRemarks::CANCELLATION_FEE,
-                    'request_id'=>$request_detail->id,
-                    'is_credit'=>false]);
-                $request_detail->requestCancellationFee()->create(['user_id'=>$request_detail->user_id,'is_paid'=>true,'cancellation_fee'=>$cancellation_fee,'paid_request_id'=>$request_detail->id]);
+                    'amount' => $cancellation_fee,
+                    'transaction_id' => $request_detail->id,
+                    'remarks' => WalletRemarks::CANCELLATION_FEE,
+                    'request_id' => $request_detail->id,
+                    'is_credit' => false,
+                ]);
+                $request_detail->requestCancellationFee()->create([
+                    'user_id' => $request_detail->user_id,
+                    'is_paid' => true,
+                    'cancellation_fee' => $cancellation_fee,
+                    'paid_request_id' => $request_detail->id,
+                ]);
             } else {
-                $request_detail->requestCancellationFee()->create(['user_id'=>$request_detail->user_id,'is_paid'=>false,'cancellation_fee'=>$cancellation_fee]);
+                $request_detail->requestCancellationFee()->create([
+                    'user_id' => $request_detail->user_id,
+                    'is_paid' => false,
+                    'cancellation_fee' => $cancellation_fee,
+                ]);
             }
         }
-
-        // Available the driver who belongs to the request
+    
+        $driver = null;
         $request_driver = $request_detail->driverDetail;
         if ($request_driver) {
             $driver = $request_driver;
         } else {
             $request_meta_driver = $request_detail->requestMeta()->where('active', true)->first();
-            if($request_meta_driver){
-            $driver = $request_meta_driver->driver;
-
-            }else{
-                $driver=null;
+            if ($request_meta_driver) {
+                $driver = $request_meta_driver->driver;
             }
         }
-
-        // Delete Meta Driver From Firebase
-            $this->database->getReference('request-meta/'.$request_detail->id)->remove();
-
-        
+    
+        // Remove the request meta from Firebase
+        $this->database->getReference('request-meta/' . $request_detail->id)->remove();
+    
+        // Notify the driver about the cancellation
         if ($driver) {
-
-            // $this->database->getReference('request-meta/'.$request_detail.'/'.$driver->id)->remove();
-
             $driver->available = true;
             $driver->save();
-            $driver->fresh();
-            // Notify the driver that the user is cancelled the trip request
+    
             $notifiable_driver = $driver->user;
-            $request_result =  fractal($request_detail, new TripRequestTransformer)->parseIncludes('userDetail');
-
+            $request_result = fractal($request_detail, new TripRequestTransformer)->parseIncludes('userDetail');
             $push_request_detail = $request_result->toJson();
-            $title = trans('push_notifications.trip_cancelled_by_user_title',[],$notifiable_driver->lang);
-            $body = trans('push_notifications.trip_cancelled_by_user_body',[],$notifiable_driver->lang);
-
-            $push_data = ['success'=>true,'success_message'=>PushEnums::REQUEST_CANCELLED_BY_USER,'result'=>(string)$push_request_detail];
-
+            $title = trans('push_notifications.trip_cancelled_by_user_title', [], $notifiable_driver->lang);
+            $body = trans('push_notifications.trip_cancelled_by_user_body', [], $notifiable_driver->lang);
+    
+            dispatch(new SendPushNotification($notifiable_driver, $title, $body));
+    
             $socket_data = new \stdClass();
             $socket_data->success = true;
-            $socket_data->success_message  = PushEnums::REQUEST_CANCELLED_BY_USER;
+            $socket_data->success_message = PushEnums::REQUEST_CANCELLED_BY_USER;
             $socket_data->result = $request_result;
-            // Form a socket sturcture using users'id and message with event name
-            // $socket_message = structure_for_socket($driver->id, 'driver', $socket_data, 'request_handler');
-
-            // dispatch(new NotifyViaSocket('transfer_msg', $socket_message));
-            
-            // Send data via Mqtt
-            // dispatch(new NotifyViaMqtt('request_handler_'.$driver->id, json_encode($socket_data), $driver->id));
-
-           
-            dispatch(new SendPushNotification($notifiable_driver,$title,$body));
+    
+            dispatch(new NotifyViaSocket('trip_canceled', $socket_data, $driver->id));
         }
-        // Delete meta records
-        // RequestMeta::where('request_id', $request_detail->id)->delete();
-        
+    
+        // Clean up request metadata and reassign drivers
         $request_detail->requestMeta()->delete();
-
-         Artisan::call('assign_drivers:for_regular_rides');
-
+        Artisan::call('assign_drivers:for_regular_rides');
+    
         return $this->respondSuccess();
     }
+
     public function paymentMethod(Request $request)
     {
-
-       $user = auth()->user();
+        $user = auth()->user();
         $request_detail = $user->requestDetail()->where('id', $request->request_id)->first();
 
-        // dd($user);
-        // Throw an exception if the user is not authorised for this request
         if (!$request_detail) {
             $this->throwAuthorizationException();
         }
+
         $request_detail->update([
-            'payment_opt'=>$request->payment_opt,
+            'payment_opt' => $request->payment_opt,
         ]);
 
-        if($request_detail->payment_opt == 0){
-
-         $request_detail->update([
-            'is_paid'=>0, 
-        ]);
-
+        if ($request_detail->payment_opt == PaymentType::CASH) {
+            $request_detail->update([
+                'is_paid' => 0,
+            ]);
         }
 
         return $this->respondSuccess();
-
     }
+
     public function userPaymentConfirm(Request $request)
     {
-
-       $user = auth()->user();
+        $user = auth()->user();
         $request_detail = $user->requestDetail()->where('id', $request->request_id)->first();
-        // Throw an exception if the user is not authorised for this request
+
         if (!$request_detail) {
             $this->throwAuthorizationException();
         }
-        $request_detail->update([
-            'is_paid'=>1, 
-        ]);
-        return $this->respondSuccess();
 
+        $request_detail->update([
+            'is_paid' => 1,
+        ]);
+
+        return $this->respondSuccess();
     }
 }

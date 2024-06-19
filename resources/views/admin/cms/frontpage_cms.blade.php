@@ -31,7 +31,7 @@
                                     <img id="blah" src="@if($p) {{ $p.$data->tabfaviconfile }}  @endif " alt=""><br>
                                     <input type="file" id="tabfavicon" onchange="readURL(this)" name="tabfavicon" style="display:none">
                                     <button class="btn btn-primary btn-sm" type="button" onclick="$('#tabfavicon').click()" id="upload">Browse</button>
-                                    <button class="btn btn-danger btn-sm" type="button" id="remove_img" style="display: none;">Remove</button><br>
+                                    <button class="btn btn-danger btn-sm" type="button" id="remove_img" style="display: none;">Remove</button>
                                     <span class="text-danger"> {{ $errors->first('tabfavicon') }}  </span>
                                     </div>
                             </div>

@@ -1,0 +1,4 @@
+"S.No","Date","Request Id","Trip Start Time","Trip End Time","User Name","Driver Name","Owner Name","Trip Status","Paid Status","Payment Option","Vehicle Type","Ride Type","Trip Time","Trip Distance","Driver Commission","Admin Commission","Total Amount"
+"1","05/10/2024","REQ_000292","10th May 03:15 PM","10th May 03:16 PM","PILATO Mamodian","Kgabo Rich","Individual","Completed","Paid","Card/Online","Go","Regular-Instant","0 Mins","0.01 Km","R 2","R 0.2","R 2.48"
+"2","05/13/2024","REQ_000367","13th May 12:27 PM","13th May 12:27 PM","didi sc","fortune","Individual","Completed","Paid","Card/Online","Go","Regular-Instant","0 Mins","0 Km","R 2","R 0.2","R 2.48"
+"3","05/16/2024","REQ_000507","16th May 02:11 PM","16th May 02:11 PM","PILATO Mamodian","Kgabo Rich","Individual","Completed","Paid","Card/Online","Go","Regular-Instant","0 Mins","0.11 Km","R 2","R 0.2","R 2.48"

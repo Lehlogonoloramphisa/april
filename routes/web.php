@@ -62,6 +62,13 @@ Route::namespace('Web')->group(function () {
     Route::post('stripe-checkout', 'StripeController@stripeCheckout')->name('checkout.process');
     Route::get('stripe-checkout-success', 'StripeController@stripeCheckoutSuccess')->name('checkout.success');
     Route::get('stripe-checkout-error', 'StripeController@stripeCheckoutError')->name('checkout.failure');
+    //WEBHOOK
+   //Route::post('/stripe/webhook', 'StripeController@handleStripeWebhook');
+    Route::post('/stripe/webhook',  'StripeController@handleStripeWebhook')->name('stripe.webhook');
+// routes/web.php or routes/api.php
+    Route::get('/payment-status', 'StripeController@getPaymentSuccessStatus');
+   
+
 //fluterwave
     // flutterwave?amount=100&payment_for=wallet&currency=USD&user_id=2&payment_for=wallet&request_id
     Route::get('flutterwave', 'FlutterwaveController@index');
@@ -91,6 +98,7 @@ Route::namespace('Web')->group(function () {
     Route::view("pending",'pending');
 
     // Website home route
-    //Route::get('/', 'HomeController@index')->name('home');
+    //Route::get('/', 'HomeController@index')->name('home'); stripe trigger payment_intent.succeeded
+
 });
 

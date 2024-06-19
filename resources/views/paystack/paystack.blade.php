@@ -37,7 +37,7 @@
 <body>
     <div class="center">
         <img src="{{ asset('assets/img/paystack.png')}}" class="img-fluid">
-        <h1>{{ $amount }} {{ $currency }}</h1>
+        <h1>{{ $amount}} {{ $currency }}</h1>
         <form id="paymentForm">
         <div class="form-submit">
             <!-- Convert amount to kobo by multiplying by 100 -->

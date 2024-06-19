@@ -38,7 +38,7 @@
 
         body {
          {{--   background-image:linear-gradient(90deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.8)), url( '{{ login_bg() ?? (assets/images/bg.jpeg) }}' ) !important;  --}}
-            background-image:linear-gradient(90deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.8)), url(assets/images/bg.jpeg) !important;
+            background-image:linear-gradient(90deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.8)), url(assets/images/1-bg.jpg) !important;
             background-size: cover !important;
         }
 

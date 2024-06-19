@@ -1,0 +1,10 @@
+[
+  {
+    "id": 1,
+    "token": "token_value_1"
+  },
+  {
+    "id": 2,
+    "token": "token_value_2"
+  }
+]

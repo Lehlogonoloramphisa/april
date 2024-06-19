@@ -12,6 +12,7 @@
 
 use App\Base\Constants\Auth\Role;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Web\StripeController;
 
 /*
  * These routes are prefixed with 'api/v1/payment'.
@@ -64,6 +65,23 @@ Route::prefix('payment')->namespace('Payment')->middleware('auth')->group(functi
             Route::post('intent', 'StripeController@createStripeIntent');
             Route::post('add/money', 'StripeController@addMoneyToWallet');
             Route::post('make-payment-for-ride','StripeController@makePaymentForRide');
+            Route::post('/stripe/webhook', [StripeController::class, 'handleWebhook'])->name('stripe.webhook');
+	    //Route::post('/stripe/capture', [StripeController::class, 'capturePayment'])->name('stripe.capture');
+
+         /**
+         
+         // ...
+
+        Route::prefix('stripe')->namespace('Stripe')->group(function () {
+            Route::post('intent', 'StripeController@createStripeIntent');
+            Route::post('add/money', 'StripeController@addMoneyToWallet');
+            Route::post('make-payment-for-ride','StripeController@makePaymentForRide');
+            Route::post('/stripe/webhook', [StripeController::class, 'handleWebhook'])->name('stripe.webhook');
+        });
+
+// ...
+
+         * */
 
         });
 

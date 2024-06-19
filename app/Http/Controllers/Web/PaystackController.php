@@ -35,7 +35,7 @@ class PaystackController extends Controller
     public function __construct(Database $database)
     {
         $this->database = $database;
-    }
+		 }
 
     public function index(ValidatorRequest $request)
     {
@@ -48,11 +48,14 @@ class PaystackController extends Controller
         $user = User::find($user_id);
 
         $email = $user->email ?? "test@test.com";
-        $currency = $user->countryDetail->currency_code ?? "INR";
+
+        $currency = $user->countryDetail->currency_code ?? "ZAR";
+
+
         if (env('APP_FOR')=='demo') {
 
-        $currency ="NGN";
-        
+        $currency ="ZAR";
+
         }
 
 
@@ -63,11 +66,12 @@ class PaystackController extends Controller
         if($env=="test"){
         // dd("env");
 
-          $key = get_settings('paystack_test_publishable_key');
+                  $key = get_settings('paystack_test_publishable_key');
+
 
         }
-
-        return view('paystack.paystack', compact('amount', 'user', 'payment_for','currency','user_id','request_id','key','email'));
+        Log::info($key);
+		 return view('paystack.paystack', compact('amount', 'user', 'payment_for','currency','user_id','request_id','key','email'));
     }
 
     public function paystackCheckout(ValidatorRequest $request)
@@ -103,7 +107,7 @@ class PaystackController extends Controller
                         $wallet_model = new OwnerWallet();
                         $wallet_add_history_model = new OwnerWalletHistory();
                         $user_id = $user->owner->id;
-            }
+						 }
 
             $user_wallet = $wallet_model::firstOrCreate([
                 'user_id'=>$user_id]);
@@ -138,9 +142,8 @@ class PaystackController extends Controller
             }else{
 
                 $request_id = $request_id;
+				 $request_detail = RequestModel::where('id', $request_id)->first();
 
-                $request_detail = RequestModel::where('id', $request_id)->first();
-                
                 $web_booking_value = $request_detail->web_booking;
 
                 $request_detail->update(['is_paid' => true]);
